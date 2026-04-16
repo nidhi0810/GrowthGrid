@@ -45,6 +45,7 @@ const navItems = [
   { icon: BookmarkCheck, label: 'Saved Jobs', href: '/dashboard/student/saved-jobs' },
   { icon: Crown, label: 'Courses', href: '/dashboard/student/courses' },
   { icon: User, label: 'Profile', href: '/dashboard/student/profile' },
+  { icon: MessageSquare, label: 'Feedback & Support', href: '/dashboard/student/feedback-support' },
   { icon: Settings, label: 'Settings', href: '/dashboard/student/settings' },
 ];
 
@@ -140,18 +141,23 @@ export default function StudentDashboard() {
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
-                'AI Resume Review',
-                'Priority Application Badge',
-                'Advanced Job Match Insights',
-                'Mock Interview Practice',
-                'Salary Benchmark Reports',
-                'Direct Recruiter Outreach',
+                { label: 'AI Resume Review', href: '/dashboard/student/ai-resume-review' },
+                { label: 'Priority Applications', href: '/dashboard/student/priority-applications' },
+                { label: 'Job Match Insights', href: '/dashboard/student/job-match-insights' },
+                { label: 'Mock Interview', href: '/dashboard/student/mock-interview' },
+                { label: 'Salary Benchmarks', href: '/dashboard/student/salary-benchmarks' },
+                { label: 'Recruiter Outreach', href: '/dashboard/student/recruiter-outreach' },
               ].map((feature) => (
-                <div key={feature} className={`rounded-xl border p-4 ${isPremium ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-gray-50'}`}>
-                  <p className={`text-sm font-semibold ${isPremium ? 'text-green-800' : 'text-gray-700'}`}>{feature}</p>
+                <div key={feature.label} className={`rounded-xl border p-4 ${isPremium ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-gray-50'}`}>
+                  <p className={`text-sm font-semibold ${isPremium ? 'text-green-800' : 'text-gray-700'}`}>{feature.label}</p>
                   <p className={`text-xs mt-1 ${isPremium ? 'text-green-700' : 'text-gray-500'}`}>
                     {isPremium ? 'Available in your plan' : 'Locked. Subscribe to unlock.'}
                   </p>
+                  {isPremium ? (
+                    <Link href={feature.href} className="mt-3 inline-flex items-center rounded-lg bg-green-600 text-white text-xs font-semibold px-3 py-1.5 hover:bg-green-700 transition-colors">
+                      Open
+                    </Link>
+                  ) : null}
                 </div>
               ))}
             </div>

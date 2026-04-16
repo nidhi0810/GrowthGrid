@@ -37,6 +37,7 @@ const navItems = [
   { icon: Briefcase, label: 'Manage Jobs', href: '/dashboard/recruiter/manage-jobs' },
   { icon: Users, label: 'Applicants', href: '/dashboard/recruiter/applicants' },
   { icon: MessageSquare, label: 'Messages', href: '/dashboard/recruiter/messages' },
+  { icon: Bell, label: 'Support Requests', href: '/dashboard/recruiter/support-requests' },
   { icon: Settings, label: 'Settings', href: '/dashboard/recruiter/settings' },
 ];
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
-import { Briefcase, LayoutDashboard, MessageSquare, Plus, Settings, Users } from 'lucide-react';
+import { Bell, Briefcase, LayoutDashboard, MessageSquare, Plus, Settings, Users } from 'lucide-react';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard/recruiter' },
@@ -10,6 +10,7 @@ const navItems = [
   { icon: Briefcase, label: 'Manage Jobs', href: '/dashboard/recruiter/manage-jobs' },
   { icon: Users, label: 'Applicants', href: '/dashboard/recruiter/applicants' },
   { icon: MessageSquare, label: 'Messages', href: '/dashboard/recruiter/messages' },
+  { icon: Bell, label: 'Support Requests', href: '/dashboard/recruiter/support-requests' },
   { icon: Settings, label: 'Settings', href: '/dashboard/recruiter/settings' },
 ];
 
@@ -18,6 +19,7 @@ const sectionContent: Record<string, { title: string; description: string }> = {
   'manage-jobs': { title: 'Manage Jobs', description: 'Edit, pause, close, or promote your existing listings.' },
   applicants: { title: 'Applicants', description: 'Review candidates, shortlist profiles, and track hiring pipeline.' },
   messages: { title: 'Messages', description: 'Communicate with candidates and hiring team in one place.' },
+  'support-requests': { title: 'Support Requests', description: 'Handle job-related complaints and resolve recruiter issues.' },
   settings: { title: 'Settings', description: 'Manage recruiter account preferences and legal settings.' },
 };
 
@@ -107,13 +109,79 @@ export default function RecruiterSectionPage() {
           )}
 
           {sectionKey === 'messages' && (
-            <div className="mt-6 rounded-xl border border-gray-200">
-              <div className="p-4 border-b border-gray-100">
-                <p className="text-sm font-semibold text-gray-900">Candidate Messages</p>
-              </div>
-              <div className="p-4 space-y-3">
-                <div className="bg-gray-50 rounded-lg p-3 text-sm text-gray-700">Aryan: Can we reschedule the interview to Friday?</div>
-                <div className="bg-blue-50 rounded-lg p-3 text-sm text-blue-700">You: Yes, Friday 3 PM works. Sending invite.</div>
+            <div className="mt-6 rounded-xl border border-gray-200 bg-white overflow-hidden">
+              <div className="grid lg:grid-cols-3 min-h-[520px]">
+                {/* Conversations list */}
+                <div className="border-r border-gray-100">
+                  <div className="p-4 border-b border-gray-100">
+                    <p className="text-sm font-semibold text-gray-900">Conversations</p>
+                    <input className="input-field mt-3 text-sm" placeholder="Search candidate..." />
+                  </div>
+                  <div className="p-2 space-y-1">
+                    {[
+                      { name: 'Aryan Mehta', role: 'React Developer', last: 'Can we reschedule interview?', time: '2m', unread: true },
+                      { name: 'Neha Singh', role: 'Frontend Engineer', last: 'Shared my updated resume.', time: '16m', unread: false },
+                      { name: 'Kunal Jain', role: 'Product Manager', last: 'Thanks for the shortlist!', time: '1h', unread: false },
+                    ].map((chat, idx) => (
+                      <button
+                        key={chat.name}
+                        className={`w-full text-left rounded-lg p-3 transition-colors ${idx === 0 ? 'bg-blue-50 border border-blue-100' : 'hover:bg-gray-50'}`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-semibold text-gray-900">{chat.name}</p>
+                          <span className="text-[11px] text-gray-400">{chat.time}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-0.5">{chat.role}</p>
+                        <div className="flex items-center justify-between mt-1">
+                          <p className="text-xs text-gray-600 truncate pr-2">{chat.last}</p>
+                          {chat.unread && <span className="w-2 h-2 rounded-full bg-blue-600" />}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Active chat panel */}
+                <div className="lg:col-span-2 flex flex-col">
+                  <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">Aryan Mehta</p>
+                      <p className="text-xs text-gray-500">React Developer · Interview stage</p>
+                    </div>
+                    <span className="badge badge-green">Online</span>
+                  </div>
+
+                  <div className="flex-1 p-4 bg-gray-50 space-y-3 overflow-y-auto">
+                    <div className="flex justify-start">
+                      <div className="max-w-[75%] rounded-2xl rounded-bl-md bg-white border border-gray-200 px-3 py-2">
+                        <p className="text-sm text-gray-800">Hi, I am available for interview tomorrow after 2 PM.</p>
+                        <p className="text-[11px] text-gray-400 mt-1">10:04 AM</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <div className="max-w-[75%] rounded-2xl rounded-br-md bg-blue-600 px-3 py-2">
+                        <p className="text-sm text-white">Great. Can we schedule for 3 PM?</p>
+                        <p className="text-[11px] text-blue-100 mt-1 text-right">10:07 AM</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-start">
+                      <div className="max-w-[75%] rounded-2xl rounded-bl-md bg-white border border-gray-200 px-3 py-2">
+                        <p className="text-sm text-gray-800">Yes, that works. Please share the meeting link.</p>
+                        <p className="text-[11px] text-gray-400 mt-1">10:09 AM</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 border-t border-gray-100 bg-white">
+                    <div className="flex items-end gap-2">
+                      <textarea
+                        className="input-field resize-none h-11 py-2"
+                        placeholder="Type your message..."
+                      />
+                      <button className="btn-primary text-sm px-4 py-2.5">Send</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -132,6 +200,32 @@ export default function RecruiterSectionPage() {
                 <p className="text-sm text-indigo-900 font-semibold mb-2">Sponsored Courses for Hiring Partners</p>
                 <p className="text-sm text-indigo-700">Enable partner-sponsored upskilling cohorts for your shortlisted candidates.</p>
               </div>
+            </div>
+          )}
+
+          {sectionKey === 'support-requests' && (
+            <div className="mt-6 space-y-3">
+              {[
+                { id: '#2051', issue: 'Wrong job description', status: 'Open' },
+                { id: '#2058', issue: 'No response after applying', status: 'In Progress' },
+                { id: '#2064', issue: 'Duplicate job listing confusion', status: 'Open' },
+              ].map((item) => (
+                <div key={item.id} className="rounded-xl border border-gray-200 bg-white p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">{item.id}</p>
+                      <p className="text-sm text-gray-700 mt-1">{item.issue}</p>
+                      <p className="text-xs text-gray-500 mt-1">Expected resolution: 24 hours</p>
+                    </div>
+                    <span className={`badge ${item.status === 'In Progress' ? 'badge-yellow' : 'badge-blue'}`}>{item.status}</span>
+                  </div>
+                  <div className="mt-3 flex gap-2">
+                    <button className="btn-secondary text-xs px-3 py-1.5">Respond to complaint</button>
+                    <button className="btn-secondary text-xs px-3 py-1.5">Update job details</button>
+                    <button className="btn-primary text-xs px-3 py-1.5">Mark resolved</button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

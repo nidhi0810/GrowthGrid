@@ -16,6 +16,7 @@ export default function AuthPage() {
     student: '/dashboard/student',
     recruiter: '/dashboard/recruiter',
     admin: '/dashboard/admin',
+    teacher: '/dashboard/teacher',
   };
 
   const termsHref = role === 'recruiter' ? '/recruiter/terms' : role === 'student' ? '/student/terms' : '/terms';
@@ -160,6 +161,7 @@ export default function AuthPage() {
                     <option value="student">🎓 Student / Job Seeker</option>
                     <option value="recruiter">🏢 Recruiter / Employer</option>
                     <option value="admin">⚙️ Admin</option>
+                    <option value="teacher">👩‍🏫 Course Teacher</option>
                   </select>
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                 </div>

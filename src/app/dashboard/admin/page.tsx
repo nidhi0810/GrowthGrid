@@ -61,6 +61,7 @@ const navItems = [
   { icon: Briefcase, label: 'Jobs', href: '/dashboard/admin/jobs' },
   { icon: BarChart2, label: 'Analytics', href: '/dashboard/admin/analytics' },
   { icon: FileText, label: 'Reports', href: '/dashboard/admin/reports' },
+  { icon: AlertCircle, label: 'Complaints & Feedback', href: '/dashboard/admin/complaints-feedback' },
   { icon: Settings, label: 'Settings', href: '/dashboard/admin/settings' },
 ];
 
