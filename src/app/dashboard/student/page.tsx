@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Briefcase, FileText, BookmarkCheck, User, Settings,
   Bell, ChevronRight, MapPin, Star, Crown, Users, Send, X, MessageSquare,
@@ -10,6 +11,7 @@ import {
 import {
   BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid
 } from 'recharts';
+import { usePremium } from './_hooks/usePremium';
 
 const applicationData = [
   { month: 'Jan', applied: 4 }, { month: 'Feb', applied: 7 },
@@ -37,18 +39,21 @@ const statusConfig: Record<string, { badge: string; icon: React.ReactNode }> = {
 };
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', active: true, href: '' },
-  { icon: Briefcase, label: 'Browse Jobs', href: '' },
-  { icon: FileText, label: 'My Applications', href: '' },
-  { icon: BookmarkCheck, label: 'Saved Jobs', href: '' },
-  { icon: User, label: 'Profile', href: '' },
-  { icon: Settings, label: 'Settings', href: '' },
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard/student' },
+  { icon: Briefcase, label: 'Browse Jobs', href: '/dashboard/student/browse-jobs' },
+  { icon: FileText, label: 'My Applications', href: '/dashboard/student/my-applications' },
+  { icon: BookmarkCheck, label: 'Saved Jobs', href: '/dashboard/student/saved-jobs' },
+  { icon: Crown, label: 'Courses', href: '/dashboard/student/courses' },
+  { icon: User, label: 'Profile', href: '/dashboard/student/profile' },
+  { icon: Settings, label: 'Settings', href: '/dashboard/student/settings' },
 ];
 
 export default function StudentDashboard() {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isPremium, setIsPremium } = usePremium();
+  const pathname = usePathname();
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -62,9 +67,13 @@ export default function StudentDashboard() {
         </div>
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {navItems.map((item) => (
-            <button key={item.label} className={item.active ? 'sidebar-link-active w-full text-left' : 'sidebar-link w-full text-left'}>
+            <Link
+              key={item.label}
+              href={item.href}
+              className={pathname === item.href ? 'sidebar-link-active w-full text-left' : 'sidebar-link w-full text-left'}
+            >
               <item.icon className="w-5 h-5" />{item.label}
-            </button>
+            </Link>
           ))}
         </nav>
         <div className="p-4 border-t border-gray-100">
@@ -107,13 +116,45 @@ export default function StudentDashboard() {
             <div className="flex items-center gap-3">
               <Crown className="w-6 h-6" />
               <div>
-                <p className="font-bold">Upgrade to Premium</p>
-                <p className="text-yellow-100 text-sm">Get AI resume review, priority applications & more</p>
+                <p className="font-bold">Subscription Card</p>
+                <p className="text-yellow-100 text-sm">
+                  Plan: {isPremium ? 'Premium' : 'Free'}
+                </p>
               </div>
             </div>
-            <button className="bg-white text-orange-600 font-semibold text-sm px-4 py-2 rounded-lg hover:bg-yellow-50 transition-colors shrink-0">
-              Upgrade Now
+            <button
+              onClick={() => setIsPremium(!isPremium)}
+              className="bg-white text-orange-600 font-semibold text-sm px-4 py-2 rounded-lg hover:bg-yellow-50 transition-colors shrink-0"
+            >
+              {isPremium ? 'Cancel Subscription' : 'Upgrade to Premium'}
             </button>
+          </div>
+
+          {/* Subscription Features */}
+          <div className="card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-gray-900 text-lg">Subscription Features</h2>
+              <span className={`badge ${isPremium ? 'badge-green' : 'badge-yellow'}`}>
+                {isPremium ? 'Premium Enabled' : 'Free Plan'}
+              </span>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                'AI Resume Review',
+                'Priority Application Badge',
+                'Advanced Job Match Insights',
+                'Mock Interview Practice',
+                'Salary Benchmark Reports',
+                'Direct Recruiter Outreach',
+              ].map((feature) => (
+                <div key={feature} className={`rounded-xl border p-4 ${isPremium ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-gray-50'}`}>
+                  <p className={`text-sm font-semibold ${isPremium ? 'text-green-800' : 'text-gray-700'}`}>{feature}</p>
+                  <p className={`text-xs mt-1 ${isPremium ? 'text-green-700' : 'text-gray-500'}`}>
+                    {isPremium ? 'Available in your plan' : 'Locked. Subscribe to unlock.'}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Stat Cards */}
@@ -186,14 +227,53 @@ export default function StudentDashboard() {
               <div className="mt-5 p-4 bg-indigo-50 rounded-xl border border-indigo-100">
                 <div className="flex items-center gap-2 mb-2">
                   <Users className="w-4 h-4 text-indigo-600" />
-                  <p className="text-sm font-semibold text-indigo-900">Refer & Earn</p>
+                  <p className="text-sm font-semibold text-indigo-900">Invite & Earn</p>
                 </div>
-                <p className="text-xs text-indigo-600 mb-3">Invite friends and earn ₹500 per referral</p>
+                <p className="text-xs text-indigo-600 mb-3">Referral code: GROWTH123</p>
                 <div className="flex gap-2">
-                  <input className="flex-1 text-xs border border-indigo-200 rounded-lg px-2 py-1.5 bg-white" value="growthgrid.in/ref/rahul123" readOnly />
-                  <button className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors">Copy</button>
+                  <input className="flex-1 text-xs border border-indigo-200 rounded-lg px-2 py-1.5 bg-white" value="GROWTH123" readOnly />
+                  <button className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors">Invite Friends</button>
+                </div>
+                <div className="grid grid-cols-3 gap-2 mt-3">
+                  <div className="bg-white rounded-lg p-2 border border-indigo-100">
+                    <p className="text-[11px] text-indigo-500">Referrals</p>
+                    <p className="text-sm font-semibold text-indigo-900">12 users</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-2 border border-indigo-100">
+                    <p className="text-[11px] text-indigo-500">Earnings</p>
+                    <p className="text-sm font-semibold text-indigo-900">₹2400</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-2 border border-indigo-100">
+                    <p className="text-[11px] text-indigo-500">Status</p>
+                    <p className="text-sm font-semibold text-indigo-900">{isPremium ? 'Premium' : 'Free'}</p>
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Sponsored Courses */}
+          <div className="card p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="font-bold text-gray-900 text-lg">Sponsored Opportunities</h2>
+              <span className="badge badge-blue">Ad-supported learning</span>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              {[
+                { title: 'Full Stack Accelerator', partner: 'CodeCraft Academy', tag: 'Sponsored', cta: 'View Course' },
+                { title: 'Data Analytics Bootcamp', partner: 'SkillBridge', tag: 'Sponsored', cta: 'Enroll with Offer' },
+                { title: 'Interview Mastery Program', partner: 'CareerSprint', tag: 'Sponsored', cta: 'Claim Discount' },
+              ].map((course) => (
+                <div key={course.title} className="rounded-xl border border-gray-200 p-4 hover:border-blue-300 transition-colors">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="badge badge-yellow">{course.tag}</span>
+                    <span className="text-[11px] text-gray-500">Affiliate</span>
+                  </div>
+                  <p className="text-sm font-semibold text-gray-900">{course.title}</p>
+                  <p className="text-xs text-gray-500 mt-1">{course.partner}</p>
+                  <button className="mt-3 text-xs btn-secondary px-3 py-1.5">{course.cta}</button>
+                </div>
+              ))}
             </div>
           </div>
 

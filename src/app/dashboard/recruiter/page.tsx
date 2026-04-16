@@ -9,6 +9,7 @@ import {
   AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid
 } from 'recharts';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const jobViewsData = [
   { day: 'Mon', views: 45 }, { day: 'Tue', views: 72 },
@@ -31,12 +32,12 @@ const applicants = [
 ];
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', active: true },
-  { icon: Plus, label: 'Post Job' },
-  { icon: Briefcase, label: 'Manage Jobs' },
-  { icon: Users, label: 'Applicants' },
-  { icon: MessageSquare, label: 'Messages' },
-  { icon: Settings, label: 'Settings' },
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard/recruiter' },
+  { icon: Plus, label: 'Post Job', href: '/dashboard/recruiter/post-job' },
+  { icon: Briefcase, label: 'Manage Jobs', href: '/dashboard/recruiter/manage-jobs' },
+  { icon: Users, label: 'Applicants', href: '/dashboard/recruiter/applicants' },
+  { icon: MessageSquare, label: 'Messages', href: '/dashboard/recruiter/messages' },
+  { icon: Settings, label: 'Settings', href: '/dashboard/recruiter/settings' },
 ];
 
 const statusColor: Record<string, string> = {
@@ -47,6 +48,7 @@ const statusColor: Record<string, string> = {
 export default function RecruiterDashboard() {
   const [activeTab, setActiveTab] = useState('jobs');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -60,9 +62,13 @@ export default function RecruiterDashboard() {
         </div>
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {navItems.map(item => (
-            <button key={item.label} className={item.active ? 'sidebar-link-active w-full text-left' : 'sidebar-link w-full text-left'}>
+            <Link
+              key={item.label}
+              href={item.href}
+              className={pathname === item.href ? 'sidebar-link-active w-full text-left' : 'sidebar-link w-full text-left'}
+            >
               <item.icon className="w-5 h-5" />{item.label}
-            </button>
+            </Link>
           ))}
         </nav>
         <div className="p-4 border-t border-gray-100">

@@ -10,12 +10,16 @@ export default function AuthPage() {
   const [role, setRole] = useState('student');
   const [rememberMe, setRememberMe] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [agreeLoginTerms, setAgreeLoginTerms] = useState(false);
 
   const redirectMap: Record<string, string> = {
     student: '/dashboard/student',
     recruiter: '/dashboard/recruiter',
     admin: '/dashboard/admin',
   };
+
+  const termsHref = role === 'recruiter' ? '/recruiter/terms' : role === 'student' ? '/student/terms' : '/terms';
+  const privacyHref = role === 'recruiter' ? '/recruiter/privacy-policy' : role === 'student' ? '/student/privacy-policy' : '/privacy-policy';
 
   return (
     <div className="min-h-screen flex">
@@ -162,19 +166,33 @@ export default function AuthPage() {
               </div>
 
               {mode === 'login' ? (
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} className="w-4 h-4 accent-blue-600 rounded" />
-                    <span className="text-sm text-gray-600">Remember me</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} className="w-4 h-4 accent-blue-600 rounded" />
+                      <span className="text-sm text-gray-600">Remember me</span>
+                    </label>
+                    <button type="button" className="text-sm text-blue-600 font-medium hover:underline">Forgot password?</button>
+                  </div>
+                  <label className="flex items-start gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={agreeLoginTerms}
+                      onChange={e => setAgreeLoginTerms(e.target.checked)}
+                      className="w-4 h-4 accent-blue-600 rounded mt-0.5"
+                      required
+                    />
+                    <span className="text-sm text-gray-600">
+                      I accept the <Link href={termsHref} className="text-blue-600 hover:underline">Terms & Conditions</Link>
+                    </span>
                   </label>
-                  <button type="button" className="text-sm text-blue-600 font-medium hover:underline">Forgot password?</button>
                 </div>
               ) : (
                 <label className="flex items-start gap-2 cursor-pointer">
                   <input type="checkbox" checked={agreeTerms} onChange={e => setAgreeTerms(e.target.checked)} className="w-4 h-4 accent-blue-600 rounded mt-0.5" required />
                   <span className="text-sm text-gray-600">
-                    I agree to the <Link href="#" className="text-blue-600 hover:underline">Terms of Service</Link> and{' '}
-                    <Link href="#" className="text-blue-600 hover:underline">Privacy Policy</Link>
+                    I agree to the <Link href={termsHref} className="text-blue-600 hover:underline">Terms of Service</Link> and{' '}
+                    <Link href={privacyHref} className="text-blue-600 hover:underline">Privacy Policy</Link>
                   </span>
                 </label>
               )}
@@ -212,8 +230,8 @@ export default function AuthPage() {
 
           <p className="text-center text-xs text-gray-400 mt-4">
             By continuing, you agree to our{' '}
-            <Link href="#" className="text-blue-600 hover:underline">Terms</Link> &{' '}
-            <Link href="#" className="text-blue-600 hover:underline">Privacy Policy</Link>
+            <Link href={termsHref} className="text-blue-600 hover:underline">Terms</Link> &{' '}
+            <Link href={privacyHref} className="text-blue-600 hover:underline">Privacy Policy</Link>
           </p>
         </div>
       </div>

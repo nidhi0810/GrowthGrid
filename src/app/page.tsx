@@ -291,7 +291,20 @@ export default function LandingPage() {
                 <h4 className="text-white font-semibold mb-4">{col.title}</h4>
                 <ul className="space-y-2">
                   {col.links.map(link => (
-                    <li key={link}><Link href="/auth" className="text-sm hover:text-white transition-colors">{link}</Link></li>
+                    <li key={link}>
+                      <Link
+                        href={
+                          link === 'Privacy Policy'
+                            ? '/privacy-policy'
+                            : link === 'Terms of Service'
+                              ? '/terms'
+                              : '/auth'
+                        }
+                        className="text-sm hover:text-white transition-colors"
+                      >
+                        {link}
+                      </Link>
+                    </li>
                   ))}
                 </ul>
               </div>

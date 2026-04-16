@@ -8,6 +8,8 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, Legend, AreaChart, Area
 } from 'recharts';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const revenueData = [
   { month: 'Jan', revenue: 42000 }, { month: 'Feb', revenue: 58000 },
@@ -54,12 +56,12 @@ const complaints = [
 ];
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', active: true },
-  { icon: Users, label: 'Users' },
-  { icon: Briefcase, label: 'Jobs' },
-  { icon: BarChart2, label: 'Analytics' },
-  { icon: FileText, label: 'Reports' },
-  { icon: Settings, label: 'Settings' },
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard/admin' },
+  { icon: Users, label: 'Users', href: '/dashboard/admin/users' },
+  { icon: Briefcase, label: 'Jobs', href: '/dashboard/admin/jobs' },
+  { icon: BarChart2, label: 'Analytics', href: '/dashboard/admin/analytics' },
+  { icon: FileText, label: 'Reports', href: '/dashboard/admin/reports' },
+  { icon: Settings, label: 'Settings', href: '/dashboard/admin/settings' },
 ];
 
 const severityColor: Record<string, string> = { High: 'badge-red', Medium: 'badge-yellow', Low: 'badge-blue' };
@@ -68,6 +70,8 @@ const statusColor2: Record<string, string> = { Open: 'badge-red', Resolved: 'bad
 const fmt = (n: number) => n >= 1000 ? `₹${(n / 1000).toFixed(0)}K` : `₹${n}`;
 
 export default function AdminDashboard() {
+  const pathname = usePathname();
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
@@ -84,9 +88,13 @@ export default function AdminDashboard() {
         </div>
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {navItems.map(item => (
-            <button key={item.label} className={item.active ? 'sidebar-link-active w-full text-left' : 'sidebar-link w-full text-left'}>
+            <Link
+              key={item.label}
+              href={item.href}
+              className={pathname === item.href ? 'sidebar-link-active w-full text-left' : 'sidebar-link w-full text-left'}
+            >
               <item.icon className="w-5 h-5" />{item.label}
-            </button>
+            </Link>
           ))}
         </nav>
         <div className="p-4 border-t border-gray-100">
